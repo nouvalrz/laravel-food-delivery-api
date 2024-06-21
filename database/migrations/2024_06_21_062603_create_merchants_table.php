@@ -17,7 +17,7 @@ return new class extends Migration
             // latitude
             $table->decimal('lat', 10, 8)->nullable();  
             // longitude
-            $table->decimal('long', 10, 8)->nullable();
+            $table->decimal('long', 11, 8)->nullable();
             $table->string('address');
             $table->string('image');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
