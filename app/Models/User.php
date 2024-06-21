@@ -47,4 +47,22 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function buyer()
+    {
+        // Define the relationship with the Buyer model
+        return $this->hasOne(Buyer::class);
+    }
+
+    public function merchant()
+    {
+        // Define the relationship with the Merchant model
+        return $this->hasOne(Merchant::class);
+    }
+
+    public function driver()
+    {
+        // Define the relationship with the Driver model
+        return $this->hasOne(Driver::class);
+    }
 }
