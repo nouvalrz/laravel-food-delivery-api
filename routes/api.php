@@ -32,11 +32,11 @@ Route::middleware(['auth:sanctum', 'role:' . User::ROLE_MERCHANT])->group(functi
 });
 
 // Role BUYER
-Route::middleware(['auth:sanctum', 'role:' . User::ROLE_MERCHANT])->group(function () {
+Route::middleware(['auth:sanctum', 'role:' . User::ROLE_BUYER])->group(function () {
     //
 });
 
 // Role DRIVER
-Route::middleware(['auth:sanctum', 'role:' . User::ROLE_MERCHANT])->group(function () {
+Route::middleware(['auth:sanctum', 'role:' . User::ROLE_DRIVER])->group(function () {
     //
 });
