@@ -69,6 +69,8 @@ class AuthController extends Controller
             $userParams['roles'] = 'merchant';
 
             $user = User::create($userParams);
+
+            
             $merchant = $user->merchant()->create([
                 'phone_number' => $request->phone_number,
                 'address' => $request->address,
@@ -153,7 +155,7 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $user->createToken('auth_token', [$user->roles])->plainTextToken;
 
         return response()->json([
             'status' => 'success',

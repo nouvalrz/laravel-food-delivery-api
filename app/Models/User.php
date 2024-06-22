@@ -12,6 +12,10 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens;
 
+    const ROLE_MERCHANT = 'merchant';
+    const ROLE_BUYER = 'buyer';
+    const ROLE_DRIVER = 'driver';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,7 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        '',
+        'roles',
 
     ];
 
