@@ -56,4 +56,37 @@ class MerchantOrderController extends Controller
             ], 400);
         }
     }
+
+    public function updateOrderStatus(Request $request, $id){
+        try{
+            $request->validate([
+                'status' => 'required|in:processing,ready'
+            ]);
+
+            $merchant = auth()->user()->merchant;
+            $order =  $merchant->orders()->findOrFail($id);
+
+            if(!in_array($order->status, [Order::STATUS_PAID, Order::STATUS_PROCESSING])){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Order status not eligible for update (STATUS : ' . $order->status . ')'
+                ], 400);
+            }
+
+            $order->status = $request->status;
+            $order->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Success update order status to ' . $request->status,
+                'data' => $order
+            ], 400);
+
+        }catch (\Exception $e){
+            return response()->json([
+               'status' => 'error',
+               'message' => $e->getMessage()
+            ], 400);
+        }
+    }
 }

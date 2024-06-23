@@ -36,19 +36,20 @@ Route::middleware(['auth:sanctum', 'role:' . User::ROLE_MERCHANT])->prefix('merc
     // Order
     Route::get('/orders', [App\Http\Controllers\Api\Merchant\MerchantOrderController::class, 'index']);
     Route::post('/orders/status', [App\Http\Controllers\Api\Merchant\MerchantOrderController::class, 'getOrderByStatus']);
+    Route::patch('/orders/{id}/status', [App\Http\Controllers\Api\Merchant\MerchantOrderController::class, 'updateOrderStatus']);
 });
 
 // Role BUYER
 Route::middleware(['auth:sanctum', 'role:' . User::ROLE_BUYER])->prefix('buyer')->group(function () {
-    // create order
     Route::post('/orders', [App\Http\Controllers\Api\Buyer\BuyerOrderController::class, 'create']);
     Route::get('/orders', [App\Http\Controllers\Api\Buyer\BuyerOrderController::class, 'index']);
     Route::patch('/orders/{id}/cancel', [App\Http\Controllers\Api\Buyer\BuyerOrderController::class, 'cancelOrder']);
 });
 
 // Role DRIVER
-Route::middleware(['auth:sanctum', 'role:' . User::ROLE_DRIVER])->group(function () {
-    //
+Route::middleware(['auth:sanctum', 'role:' . User::ROLE_DRIVER])->prefix('driver')->group(function () {
+    Route::get('/orders', [App\Http\Controllers\Api\Driver\DriverOrderController::class, 'index']);
+    Route::patch('/orders/{id}/status', [App\Http\Controllers\Api\Driver\DriverOrderController::class, 'updateOrderStatus']);
 });
 
 Route::prefix('public')->group(function () {
