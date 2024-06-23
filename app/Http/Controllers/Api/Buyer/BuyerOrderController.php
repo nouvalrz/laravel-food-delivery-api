@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Buyer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
@@ -57,7 +58,7 @@ class BuyerOrderController extends Controller
                 'shipping_latitude' => $request->shipping_latitude,
                 'shipping_longitude' => $request->shipping_longitude,
                 'shipping_address_detail' => $request->shipping_address_detail,
-                'status' => 'pending',
+                'status' => Order::STATUS_PENDING,
             ]);
 
             foreach ($request->order_items as $item) {
@@ -83,5 +84,34 @@ class BuyerOrderController extends Controller
             DB::rollback();
             return response()->json(['error' => $e->getMessage()], 400);
         }
+    }
+
+    // cancel order
+    public function cancelOrder($id)
+    {
+        $buyer = auth()->user()->buyer;
+        $order = $buyer->orders()->find($id);
+        if (!$order) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Order not found',
+            ], 404);
+        }
+
+        if ($order->status !== Order::STATUS_PENDING) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Order cannot be cancelled',
+            ], 400);
+        }
+
+        $order->status = ORDER::STATUS_CANCELLED_BY_BUYER;
+        $order->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Order cancelled successfully',
+            'data' => $order
+        ]);
     }
 }

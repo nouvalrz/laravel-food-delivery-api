@@ -20,6 +20,16 @@ class Order extends Model
         'status',
     ];
 
+    const STATUS_PENDING = 'pending';
+    const STATUS_PAID = 'paid';
+    const STATUS_PROCESSING = 'processing';
+    const STATUS_READY = 'ready';
+    const STATUS_PICKUP = 'pickup';
+    const STATUS_DELIVERING = 'delivering';
+    const STATUS_RECEIVED = 'received';
+    const STATUS_CANCELLED_BY_BUYER = 'cancelled_by_buyer';
+    const STATUS_CANCELLED_BY_SYSTEM = 'cancelled_by_system';
+
     public function buyer()
     {
         return $this->belongsTo(Buyer::class);
