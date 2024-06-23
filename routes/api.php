@@ -34,8 +34,10 @@ Route::middleware(['auth:sanctum', 'role:' . User::ROLE_MERCHANT])->prefix('merc
 });
 
 // Role BUYER
-Route::middleware(['auth:sanctum', 'role:' . User::ROLE_BUYER])->group(function () {
-    //
+Route::middleware(['auth:sanctum', 'role:' . User::ROLE_BUYER])->prefix('buyer')->group(function () {
+    // create order
+    Route::post('/orders', [App\Http\Controllers\Api\Buyer\BuyerOrderController::class, 'create']);
+    Route::get('/orders', [App\Http\Controllers\Api\Buyer\BuyerOrderController::class, 'index']);
 });
 
 // Role DRIVER
