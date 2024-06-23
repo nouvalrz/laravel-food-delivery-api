@@ -12,14 +12,14 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     public function buyerRegister(Request $request){
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-            'phone_number' => 'required|string',
-        ]);
-
         try {
+            $request->validate([
+                'name' => 'required|string',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|min:6',
+                'phone_number' => 'required|string',
+            ]);
+
             DB::beginTransaction();
 
             $userParams = $request->only('name', 'email');
@@ -70,13 +70,15 @@ class AuthController extends Controller
 
             $user = User::create($userParams);
 
-            
+            $image = $request->file('image');
+            $image->storeAs('public/merchants', $image->hashName());
+
             $merchant = $user->merchant()->create([
                 'phone_number' => $request->phone_number,
                 'address' => $request->address,
                 'lat' => $request->lat,
                 'long' => $request->long,
-                'image' => $request->file('image')->store('images/merchants')
+                'image' => '/storage/merchants/' . $image->hashName(),
             ]);
 
             DB::commit();
@@ -98,16 +100,16 @@ class AuthController extends Controller
     }
 
     public function driverRegister(Request $request){
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-            'phone_number' => 'required|string',
-            'license_plate' => 'required|string',
-            'image' => 'required|image',
-        ]);
-
         try {
+            $request->validate([
+                'name' => 'required|string',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|min:6',
+                'phone_number' => 'required|string',
+                'license_plate' => 'required|string',
+                'image' => 'required|image',
+            ]);
+
             DB::beginTransaction();
 
             $userParams = $request->only('name', 'email');
@@ -115,10 +117,14 @@ class AuthController extends Controller
             $userParams['roles'] = 'driver';
 
             $user = User::create($userParams);
+
+            $image = $request->file('image');
+            $image->storeAs('public/drivers', $image->hashName());
+
             $driver = $user->driver()->create([
                 'phone_number' => $request->phone_number,
                 'license_plate' => $request->license_plate,
-                'image' => $request->file('image')->store('images/drivers')
+                'image' => '/storage/drivers/' . $image->hashName(),
             ]);
 
             DB::commit();
@@ -177,5 +183,5 @@ class AuthController extends Controller
         ]);
     }
 
-    
+
 }

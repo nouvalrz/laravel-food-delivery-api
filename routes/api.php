@@ -27,9 +27,10 @@ Route::post('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout'
 
 // Role MERCHANT
 Route::middleware(['auth:sanctum', 'role:' . User::ROLE_MERCHANT])->prefix('merchant')->group(function () {
-    Route::post('/product', [App\Http\Controllers\Api\ProductController::class, 'store']);
-    Route::put('/product/{id}', [App\Http\Controllers\Api\ProductController::class, 'update']);
-    Route::delete('/product/{id}', [App\Http\Controllers\Api\ProductController::class, 'destroy']);
+    Route::post('/products', [App\Http\Controllers\Api\Merchant\MerchantProductController::class, 'store']);
+    Route::get('/products', [App\Http\Controllers\Api\Merchant\MerchantProductController::class, 'index']);
+    Route::put('/products/{id}', [App\Http\Controllers\Api\Merchant\MerchantProductController::class, 'update']);
+    Route::delete('/products/{id}', [App\Http\Controllers\Api\Merchant\MerchantProductController::class, 'destroy']);
 });
 
 // Role BUYER
@@ -41,3 +42,9 @@ Route::middleware(['auth:sanctum', 'role:' . User::ROLE_BUYER])->group(function 
 Route::middleware(['auth:sanctum', 'role:' . User::ROLE_DRIVER])->group(function () {
     //
 });
+
+Route::prefix('public')->group(function () {
+    Route::get('/products', [App\Http\Controllers\Api\ProductController::class, 'index']);
+    Route::get('/merchant/{id}/products', [App\Http\Controllers\Api\ProductController::class, 'getProductsByMerchant']);
+});
+
