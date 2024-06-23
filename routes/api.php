@@ -26,9 +26,10 @@ Route::post('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout'
 
 
 // Role MERCHANT
-Route::middleware(['auth:sanctum', 'role:' . User::ROLE_MERCHANT])->group(function () {
-    //
-
+Route::middleware(['auth:sanctum', 'role:' . User::ROLE_MERCHANT])->prefix('merchant')->group(function () {
+    Route::post('/product', [App\Http\Controllers\Api\ProductController::class, 'store']);
+    Route::put('/product/{id}', [App\Http\Controllers\Api\ProductController::class, 'update']);
+    Route::delete('/product/{id}', [App\Http\Controllers\Api\ProductController::class, 'destroy']);
 });
 
 // Role BUYER
